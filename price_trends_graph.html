@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Price Trends: Paternoster & Elands Bay (2024-2025)</title>
-    <!-- Chart.js CDN -->
+    <!-- Chart.js CDN (v4.4.2, reliable for 2025) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.2/chart.umd.min.js"></script>
-    <!-- Chart.js Annotation Plugin CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
     <style>
         #priceTrends {
             max-width: 1050px; /* 3.5in at 300 DPI */
@@ -20,18 +18,39 @@
             text-align: center;
             padding: 20px;
         }
+        #annotationLabel {
+            position: absolute;
+            top: 200px; /* Adjust based on graph position; approximate for Dec 2025 point */
+            left: 800px; /* Approximate x-position for Dec 2025 */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 12px;
+            font-style: italic;
+            color: #000;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
     <h1>Price Trends: Paternoster & Elands Bay (2024-2025)</h1>
-    <canvas id="priceTrends" width="1050" height="750"></canvas>
+    <div style="position: relative;">
+        <canvas id="priceTrends" width="1050" height="750"></canvas>
+        <div id="annotationLabel">10% Growth = High ROI with $VISTA</div>
+    </div>
     <script>
-        // Register the annotation plugin
-        Chart.register(ChartjsPluginAnnotation);
+        // Error handling: Log if Chart is loaded
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js not loaded. Check internet/CDN.');
+            document.body.innerHTML += '<p style="color: red;">Error: Chart.js failed to load. Check console (F12).</p>';
+        } else {
+            console.log('Chart.js loaded successfully.');
+        }
 
         // Create the line graph
         const ctx = document.getElementById('priceTrends').getContext('2d');
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ['Jan 2024', 'Jun 2024', 'Dec 2024', 'Jun 2025', 'Dec 2025'],
@@ -60,27 +79,13 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     title: {
                         display: true,
                         text: 'Price Trends: Paternoster & Elands Bay (2024-2025)',
                         font: { family: 'Verdana', size: 16, weight: 'bold' },
                         color: '#2F4F4F'
-                    },
-                    annotation: {
-                        annotations: {
-                            label1: {
-                                type: 'label',
-                                xValue: 'Dec 2025',
-                                yValue: 110000,
-                                content: '10% Growth = High ROI with $VISTA',
-                                font: { family: 'Tahoma', size: 12, style: 'italic' },
-                                color: '#000',
-                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                borderRadius: 3,
-                                padding: 5
-                            }
-                        }
                     },
                     legend: {
                         labels: { font: { family: 'Verdana', size: 12 } }
@@ -102,6 +107,7 @@
                 }
             }
         });
+        console.log('Graph created successfully.');
     </script>
 </body>
 </html>
